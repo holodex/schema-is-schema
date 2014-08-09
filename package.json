@@ -1,0 +1,35 @@
+{
+  "name": "schema-is-schema",
+  "version": "1.0.0",
+  "description": "returns whether input is a json-schema",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "tape test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/openappjs/schema-is-schema.git"
+  },
+  "keywords": [
+    "openappjs",
+    "json-schema",
+    "schema",
+    "meta",
+    "metaschema"
+  ],
+  "author": "ahdinosaur",
+  "license": "AGPLv3",
+  "bugs": {
+    "url": "https://github.com/openappjs/schema-is-schema/issues"
+  },
+  "homepage": "https://github.com/openappjs/schema-is-schema",
+  "devDependencies": {
+    "tape": "^2.14.0"
+  },
+  "dependencies": {
+    "jjv": "^1.0.0"
+  }
+}
