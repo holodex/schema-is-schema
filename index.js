@@ -13,6 +13,13 @@ module.exports = function isSchema (schema, options) {
   var errors = jjv.validate(metaSchemaName, schema);
 
   if (errors) {
+    if (options.throw) {
+      var err = "schema-is-schema: invalid schema";
+      err.schema = schema;
+      err.options = options;
+      err.errors = errors;
+      throw err;
+    }
     return errors;
   } else {
     return true;

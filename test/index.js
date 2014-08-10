@@ -19,6 +19,18 @@ test("non schemas", function (t) {
   t.end();
 });
 
+test("non schemas throw", function (t) {
+  [true, false, null, undefined, [1,2,3], "123", 123]
+  .forEach(function (value) {
+    t.throws(
+      function () { schemaDeRef(schemas, value) },
+      "schema-is-schema: invalid schema",
+      value + " is not schema and throws error"
+    );
+  });
+  t.end();
+});
+
 test("schemas", function (t) {
   t.equal(isSchema({
     type: "string",
