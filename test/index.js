@@ -23,8 +23,8 @@ test("non schemas throw", function (t) {
   [true, false, null, undefined, [1,2,3], "123", 123]
   .forEach(function (value) {
     t.throws(
-      function () { schemaDeRef(schemas, value) },
-      "schema-is-schema: invalid schema",
+      function () { isSchema(value, { throw: true }) },
+      new Error("schema-is-schema: invalid schema"),
       value + " is not schema and throws error"
     );
   });
