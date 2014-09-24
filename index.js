@@ -1,6 +1,7 @@
 var jjv = require('jjv')();
 
 jjv.addSchema(require('./schemas/draft-04-schema'))
+jjv.addSchema(require('./schemas/draft-04-no-id-format-schema'))
 
 module.exports = function isSchema (schema, options) {
   options = options || {};
