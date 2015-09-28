@@ -1,28 +1,27 @@
-var jjv = require('jjv')();
+var genValidator = require('is-my-json-valid')
 
-jjv.addSchema(require('./schemas/draft-04-schema'))
-jjv.addSchema(require('./schemas/draft-04-no-id-format-schema'))
+var schemas = require('./schemas')
 
-module.exports = function isSchema (schema, options) {
-  options = options || {};
+module.exports = generateIsSchema
 
-  var draft = options.draft || 4;
-  
-  var metaSchemaName = "http://json-schema.org/draft-0" +
-    draft.toString() + "/schema#";
+function generateIsSchema (options) {
+  // default options to {}
+  options = (options != null) ? options : {}
 
-  var errors = jjv.validate(metaSchemaName, schema);
-
-  if (errors) {
-    if (options.throw) {
-      var err = "schema-is-schema: invalid schema";
-      err.schema = schema;
-      err.options = options;
-      err.errors = errors;
-      throw err;
+  var metaSchemaName = options.metaSchemaName
+  // if meta schema name not given
+  if (metaSchemaName == null) {
+    var draft = options.draft
+    // if draft not given
+    if (draft == null) {
+      // default to draft 4
+      draft = 4
     }
-    return errors;
-  } else {
-    return true;
+
+    // meta schema name is draft default
+    metaSchemaName = 'http://json-schema.org/draft-0' +
+      draft.toString() + '/schema#'
   }
-};
+
+  return genValidator(schemas[metaSchemaName], options)
+}

@@ -1,98 +1,107 @@
-var test = require('tape');
+var test = require('tape')
 
-var isSchema;
+var IsSchema
 
-test("require module", function (t) {
-  isSchema = require('../');
-  t.ok(isSchema);
-  t.end();
-});
+test('require module', function (t) {
+  IsSchema = require('../')
+  t.equal(typeof IsSchema, 'function', '`IsSchema` is a function')
+  t.equal(typeof IsSchema(), 'function', '`IsSchema()` is a function')
+  t.end()
+})
 
-test("non schemas", function (t) {
-  t.notEqual(isSchema(true), true, "true is not schema");
-  t.notEqual(isSchema(false), true, "false is not schema");
-  t.notEqual(isSchema(null), true, "null is not schema");
-  t.notEqual(isSchema(undefined), true, "undefined is not schema");
-  t.notEqual(isSchema([1,2,3]), true, "array is not schema");
-  t.notEqual(isSchema("123"), true, "string is not schema");
-  t.notEqual(isSchema(123), true, "number is not schema");
-  t.end();
-});
+test('undefined returns true', function (t) {
+  var isSchema = IsSchema()
+  t.equal(isSchema(undefined), true, undefined + ' is a schema')
+  t.end()
+})
 
-test("non schemas throw", function (t) {
-  [true, false, null, undefined, [1,2,3], "123", 123]
+test('non schemas return false', function (t) {
+  var isSchema = IsSchema()
+  ;[true, false, null, [1, 2, 3], '123', 123]
   .forEach(function (value) {
-    t.throws(
-      function () { isSchema(value, { throw: true }) },
-      new Error("schema-is-schema: invalid schema"),
-      value + " is not schema and throws error"
-    );
-  });
-  t.end();
-});
+    t.equal(isSchema(value), false, value + ' is not a schema')
+  })
+  t.end()
+})
 
-test("schemas", function (t) {
+test('bad schemas return false and give array errors', function (t) {
+  var isSchema = IsSchema()
   t.equal(isSchema({
-    type: "string",
-  }), true, "string schema is schema");
+    type: 'thing'
+  }), false, 'schema with type thing is a bad schema')
+  t.equal(Array.isArray(isSchema.errors), true)
   t.equal(isSchema({
-    type: "array",
+    id: 'Thing'
+  }), false, 'schema with non-uri id is a bad schema')
+  t.equal(Array.isArray(isSchema.errors), true)
+  t.end()
+})
+
+test('good schemas return true and give null errors', function (t) {
+  var isSchema = IsSchema()
+  t.equal(isSchema({
+    type: 'string'
+  }), true, 'string schema is schema')
+  t.equal(Array.isArray(isSchema.errors), false)
+  t.equal(isSchema({
+    type: 'array',
     items: {
-      type: "string"
-    },
-  }), true, "array of string schema is schema");
+      type: 'string'
+    }
+  }), true, 'array of string schema is schema')
   t.equal(isSchema({
-    id: "http://example.org/Person#",
+    id: 'http://example.org/Person#',
     properties: {
       name: {
-        type: "string",
-      },
-    },
-  }), true, "Person schema is schema");
+        type: 'string'
+      }
+    }
+  }), true, 'Person schema is schema')
   t.equal(isSchema({
-    $ref: "Person",
-  }), true, "Person reference schema is schema");
+    $ref: 'Person'
+  }), true, 'Person reference schema is schema')
   t.equal(isSchema({
     oneOf: [{
-      $ref: "Person",
+      $ref: 'Person'
     }, {
-      type: "array",
+      type: 'array',
       items: {
-        $ref: "Person",
-      },
-    }],
-  }), true, "oneOf Person or many Persons schema is schema");
-  t.end();
-});
+        $ref: 'Person'
+      }
+    }]
+  }), true, 'oneOf Person or many Persons schema is schema')
+  t.end()
+})
 
-test("schemas with extra props", function (t) {
+test('schemas with extra props', function (t) {
+  var isSchema = IsSchema()
   t.equal(isSchema({
-    context: "vocab:name",
-    type: "string",
-  }), true, "string schema with context is schema");
+    context: 'vocab:name',
+    type: 'string'
+  }), true, 'string schema with context is schema')
   t.equal(isSchema({
-    reverse: "owner",
-    $ref: "Resource",
-  }), true, "Person knows schema is schema");
+    reverse: 'owner',
+    $ref: 'Resource'
+  }), true, 'Person knows schema is schema')
   t.equal(isSchema({
-    type: "array",
-    context: "vocab:followers",
+    type: 'array',
+    context: 'vocab:followers',
     items: {
-      reverse: "follows",
-      $ref: "Person",
-    },
-  }), true, "Person follows schema is schema");
+      reverse: 'follows',
+      $ref: 'Person'
+    }
+  }), true, 'Person follows schema is schema')
   t.equal(isSchema({
-    id: "http://example.org/Person#",
+    id: 'http://example.org/Person#',
     prefixes: {
-      "vocab": "http://open.vocab/",
+      'vocab': 'http://open.vocab/'
     },
     properties: {
       name: {
-        context: "vocab:name",
-        type: "string",
-      },
-    },
-  }), true, "Person schema with linked data context is schema");
-  t.end();
-});
+        context: 'vocab:name',
+        type: 'string'
+      }
+    }
+  }), true, 'Person schema with linked data context is schema')
+  t.end()
+})

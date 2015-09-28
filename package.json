@@ -1,35 +1,51 @@
 {
   "name": "schema-is-schema",
-  "version": "1.2.2",
-  "description": "returns whether input is a json-schema",
+  "version": "2.0.0",
+  "description": "json-schema validation",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "tape test"
+    "test": "standard && tape test"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/openappjs/schema-is-schema.git"
+    "url": "git://github.com/holodex/schema-is-schema.git"
   },
   "keywords": [
-    "openappjs",
+    "openvocab",
+    "vocab",
     "json-schema",
+    "jsonschema",
     "schema",
     "meta",
-    "metaschema"
+    "metaschema",
+    "validation",
+    "validator"
   ],
   "author": "ahdinosaur",
-  "license": "AGPLv3",
+  "license": "ISC",
   "bugs": {
-    "url": "https://github.com/openappjs/schema-is-schema/issues"
+    "url": "https://github.com/holodex/schema-is-schema/issues"
   },
-  "homepage": "https://github.com/openappjs/schema-is-schema",
+  "homepage": "https://github.com/holodex/schema-is-schema",
   "devDependencies": {
-    "tape": "^2.14.0"
+    "standard": "^5.3.1",
+    "tape": "^4.2.0"
   },
   "dependencies": {
-    "jjv": "^1.0.0"
+    "configurify": "^1.0.0",
+    "is-my-json-valid": "^2.12.2"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "configurify",
+        {
+          "pattern": "**/schemas/index.js"
+        }
+      ]
+    ]
   }
 }
